@@ -1,0 +1,24 @@
+<article class="product-card">
+  <a href="{{ mineral.get_absolute_url }}" class="product-card__art{% if mineral.photo_url %} has-photo{% endif %}">
+    {% include "store/_mineral_art.html" %}
+    {% if mineral.discount_percent %}<span class="badge badge--sale">-{{ mineral.discount_percent }}%</span>{% endif %}
+    {% if not mineral.in_stock %}<span class="badge badge--out">Немає в наявності</span>{% endif %}
+  </a>
+  <div class="product-card__body">
+    <a href="{{ mineral.get_absolute_url }}" class="product-card__name">{{ mineral.name }}</a>
+    <p class="product-card__desc">{{ mineral.short_description }}</p>
+    <div class="product-card__row">
+      <div class="price">
+        {% if mineral.old_price %}<span class="price__old">{{ mineral.old_price }} грн</span>{% endif %}
+        <span class="price__now">{{ mineral.price }} грн</span>
+      </div>
+      {% if mineral.in_stock %}
+      <form action="{% url 'store:cart_add' mineral.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="btn btn--small">У кошик</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</article>

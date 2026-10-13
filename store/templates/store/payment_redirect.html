@@ -1,0 +1,12 @@
+{% extends "store/base.html" %}
+{% block content %}
+<div class="wrap success-page">
+  <h1>Переходимо до оплати…</h1>
+  <p class="muted">Якщо перенаправлення не відбулось, натисніть кнопку.</p>
+  <form method="post" action="{{ action }}" id="pay-redirect">
+    {% for name, value in fields.items %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
+    <button type="submit" class="btn btn--primary">Перейти до оплати</button>
+  </form>
+  <script>document.getElementById('pay-redirect').submit();</script>
+</div>
+{% endblock %}

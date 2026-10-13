@@ -1,0 +1,30 @@
+{% load static %}
+<svg class="gem-art gem-art--{{ mineral.shape }}" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{ mineral.name }}">
+  <defs>
+    <linearGradient id="grad-{{ mineral.id }}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="{{ mineral.color_primary }}"/>
+      <stop offset="100%" stop-color="{{ mineral.color_secondary }}"/>
+    </linearGradient>
+  </defs>
+  {% if mineral.shape == "point" %}
+  <polygon points="100,14 138,58 128,150 100,190 72,150 62,58" fill="url(#grad-{{ mineral.id }})"/>
+  <polygon points="100,14 138,58 100,90 62,58" fill="{{ mineral.color_primary }}" opacity="0.55"/>
+  <polygon points="62,58 100,90 100,190 72,150" fill="#000" opacity="0.12"/>
+  <polygon points="138,58 128,150 100,190 100,90" fill="#fff" opacity="0.08"/>
+  <line x1="100" y1="14" x2="100" y2="190" stroke="#fff" stroke-opacity="0.18" stroke-width="1.5"/>
+  <line x1="62" y1="58" x2="138" y2="58" stroke="#fff" stroke-opacity="0.18" stroke-width="1.5"/>
+  {% elif mineral.shape == "cluster" %}
+  <polygon points="40,180 30,110 55,70 40,180" fill="url(#grad-{{ mineral.id }})"/>
+  <polygon points="70,185 58,95 85,50 100,95 90,185" fill="url(#grad-{{ mineral.id }})"/>
+  <polygon points="105,185 98,80 122,35 140,90 128,185" fill="url(#grad-{{ mineral.id }})"/>
+  <polygon points="150,182 142,120 165,85 172,150 160,182" fill="url(#grad-{{ mineral.id }})"/>
+  <polygon points="85,50 100,95 92,120" fill="#fff" opacity="0.22"/>
+  <polygon points="122,35 140,90 128,60" fill="#fff" opacity="0.2"/>
+  <polygon points="30,110 55,70 45,130" fill="#000" opacity="0.12"/>
+  <polygon points="142,120 165,85 155,140" fill="#000" opacity="0.1"/>
+  {% else %}
+  <ellipse cx="100" cy="105" rx="72" ry="58" fill="url(#grad-{{ mineral.id }})"/>
+  <ellipse cx="76" cy="80" rx="26" ry="16" fill="#fff" opacity="0.28"/>
+  <ellipse cx="120" cy="130" rx="34" ry="20" fill="#000" opacity="0.10"/>
+  {% endif %}
+</svg>

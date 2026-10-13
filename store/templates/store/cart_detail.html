@@ -1,0 +1,54 @@
+{% extends "store/base.html" %}
+{% block title %}Кошик — Кам'яна Грань{% endblock %}
+{% block content %}
+<div class="wrap cart-page">
+  <h1>Кошик</h1>
+  {% if cart|length > 0 %}
+  <table class="cart-table">
+    <thead>
+      <tr>
+        <th>Товар</th>
+        <th>Ціна</th>
+        <th>Кількість</th>
+        <th>Сума</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart %}
+      <tr>
+        <td>
+          <div class="cart-row__product">
+            <div class="cart-row__art">{% with mineral=item.mineral %}{% include "store/_mineral_art.html" %}{% endwith %}</div>
+            <div>
+              <a href="{{ item.mineral.get_absolute_url }}" class="cart-row__name">{{ item.mineral.name }}</a>
+            </div>
+          </div>
+        </td>
+        <td>{{ item.price }} грн</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.total_price }} грн</td>
+        <td>
+          <form action="{% url 'store:cart_remove' item.mineral.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn--small">Видалити</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="cart-summary">
+    <div class="cart-summary__row"><span>Товарів</span><span>{{ cart|length }}</span></div>
+    <div class="cart-summary__total"><span>Разом</span><span>{{ cart.get_total_price }} грн</span></div>
+    <a href="{% url 'store:checkout' %}" class="btn btn--primary btn--full" style="margin-top:18px;">Оформити замовлення</a>
+  </div>
+  {% else %}
+  <div class="cart-empty">
+    <p>Ваш кошик порожній.</p>
+    <a href="{% url 'store:product_list' %}" class="btn btn--primary">Перейти до каталогу</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

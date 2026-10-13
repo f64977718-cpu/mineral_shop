@@ -1,0 +1,32 @@
+{% extends "store/base.html" %}
+{% block title %}Замовлення №{{ order.id }} — Кам'яна Грань{% endblock %}
+{% block content %}
+{% if waiting %}<meta http-equiv="refresh" content="4">{% endif %}
+<div class="wrap success-page">
+  {% if order.status == "paid" or order.status == "shipped" or order.status == "done" %}
+    <svg class="success-icon" width="56" height="56" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="26" stroke="currentColor" stroke-width="2"/><path d="M17 29L24 36L39 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <h1>Дякуємо, {{ order.full_name }}!</h1>
+    <p class="muted">Замовлення №{{ order.id }} на суму {{ order.total_amount }} грн оплачено. Підтвердження надіслано на {{ order.email }}, доставка: {{ order.city }}, {{ order.address }}.</p>
+  {% elif order.status == "new" %}
+    <h1>Замовлення №{{ order.id }} прийнято</h1>
+    <p class="muted">Оплата при отриманні — {{ order.total_amount }} грн. Ми зв'яжемось за номером {{ order.phone }} для підтвердження.</p>
+  {% elif order.status == "awaiting_payment" %}
+    <h1>Замовлення №{{ order.id }}: очікуємо оплату</h1>
+    {% if waiting %}
+      <p class="muted">Перевіряємо підтвердження від платіжної системи… Сторінка оновиться сама. Якщо ви вже заплатили — нічого повторно робити не потрібно.</p>
+    {% else %}
+      <p class="muted">Сума до сплати: {{ order.total_amount }} грн. Товар зарезервовано за вами на обмежений час.</p>
+    {% endif %}
+    {% if can_pay %}
+    <form method="post" action="{% url 'store:order_pay' order.public_id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--primary">Оплатити картку онлайн</button>
+    </form>
+    {% endif %}
+  {% elif order.status == "cancelled" %}
+    <h1>Замовлення №{{ order.id }} скасовано</h1>
+    <p class="muted">Оплату не отримано вчасно, тому товар повернуто в наявність. Якщо ви все ж заплатили — зв'яжіться з нами, ми все перевіримо.</p>
+  {% endif %}
+  <p style="margin-top:28px;"><a href="{% url 'store:product_list' %}" class="btn btn--ghost">Продовжити покупки</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "store/base.html" %}
+{% block title %}Оплата — Кам'яна Грань{% endblock %}
+{% block content %}
+<div class="wrap checkout">
+  <div>
+    <h1>Оплата замовлення №{{ order.id }}</h1>
+    <form method="post" class="form-card" id="payment-form" novalidate>
+      {% csrf_token %}
+      <div class="payment-methods">
+        {% for radio in form.method %}
+        <label class="payment-method">
+          {{ radio.tag }}
+          <span>{{ radio.choice_label }}</span>
+        </label>
+        {% endfor %}
+      </div>
+
+      <div id="card-fields" class="payment-card-fields">
+        <div class="form-field">
+          <label for="{{ form.card_number.id_for_label }}">Номер картки</label>
+          {{ form.card_number }}
+        </div>
+        <div class="form-field">
+          <label for="{{ form.card_expiry.id_for_label }}">Термін дії</label>
+          {{ form.card_expiry }}
+        </div>
+        <div class="form-field">
+          <label for="{{ form.card_cvc.id_for_label }}">CVC</label>
+          {{ form.card_cvc }}
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--full" style="margin-top:20px;">Оплатити {{ order.get_total_cost }} грн</button>
+      <p class="payment-note">Це демонстраційний платіжний потік навчального проєкту — картка нікуди не надсилається. У реальному магазині тут підключається провайдер: Stripe, LiqPay, Fondy або WayForPay.</p>
+    </form>
+  </div>
+
+  <div class="order-summary">
+    <h3>Замовлення №{{ order.id }}</h3>
+    {% for item in order.items.all %}
+    <div class="order-summary__item">
+      <span>{{ item.mineral.name }} × {{ item.quantity }}</span>
+      <span>{{ item.get_cost }} грн</span>
+    </div>
+    {% endfor %}
+    <div class="cart-summary__total" style="margin-top:14px;">
+      <span>Разом</span><span>{{ order.get_total_cost }} грн</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('input[name="method"]').forEach(function(radio){
+    radio.addEventListener('change', toggleCardFields);
+  });
+  function toggleCardFields(){
+    var cod = document.querySelector('input[name="method"][value="cod"]');
+    var cardFields = document.getElementById('card-fields');
+    cardFields.style.display = (cod && cod.checked) ? 'none' : 'grid';
+  }
+  toggleCardFields();
+</script>
+{% endblock %}

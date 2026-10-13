@@ -1,0 +1,44 @@
+{% extends "store/base.html" %}
+{% block title %}Оформлення замовлення — Кам'яна Грань{% endblock %}
+{% block content %}
+<div class="wrap checkout">
+  <div>
+    <h1>Оформлення замовлення</h1>
+    <form method="post" class="form-card" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        {% if field.name != "payment_method" %}
+        <div class="form-field">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}<div class="form-errors">{{ field.errors|striptags }}</div>{% endif %}
+        </div>
+        {% endif %}
+      {% endfor %}
+
+      <h3>Спосіб оплати</h3>
+      <div class="payment-methods">
+        {% for radio in form.payment_method %}
+        <label class="payment-method">{{ radio.tag }}<span>{{ radio.choice_label }}</span></label>
+        {% endfor %}
+      </div>
+      <p class="payment-note" style="margin-top:0;border-top:none;padding-top:0;">Оплата карткою відбувається на захищеній сторінці платіжного провайдера — дані вашої картки не потрапляють на наш сервер.</p>
+
+      <button type="submit" class="btn btn--primary btn--full">Підтвердити замовлення</button>
+    </form>
+  </div>
+
+  <div class="order-summary">
+    <h3>Ваше замовлення</h3>
+    {% for item in cart %}
+    <div class="order-summary__item">
+      <span>{{ item.mineral.name }} × {{ item.quantity }}</span>
+      <span>{{ item.total_price }} грн</span>
+    </div>
+    {% endfor %}
+    <div class="cart-summary__total" style="margin-top:14px;">
+      <span>Разом</span><span>{{ cart.get_total_price }} грн</span>
+    </div>
+  </div>
+</div>
+{% endblock %}

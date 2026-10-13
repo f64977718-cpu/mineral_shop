@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Кам'яна Грань — мінерали та кристали{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap site-header__row">
+    <a href="{% url 'store:home' %}" class="brand">
+      <span class="brand__mark">
+        <svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
+          <polygon points="20,3 33,14 28,37 20,37 12,37 7,14" fill="none" stroke="currentColor" stroke-width="2"/>
+          <line x1="20" y1="3" x2="20" y2="37" stroke="currentColor" stroke-width="1.4"/>
+          <line x1="7" y1="14" x2="33" y2="14" stroke="currentColor" stroke-width="1.4"/>
+        </svg>
+      </span>
+      <span class="brand__text">Кам'яна&nbsp;Грань</span>
+    </a>
+    <nav class="site-nav">
+      <a href="{% url 'store:product_list' %}">Каталог</a>
+    </nav>
+    <a href="{% url 'store:cart_detail' %}" class="cart-link">
+      Кошик
+      <span class="cart-link__count">{{ cart|length }}</span>
+    </a>
+  </div>
+</header>
+
+{% if messages %}
+<div class="wrap messages">
+  {% for message in messages %}
+    <div class="message message--{{ message.tags }}">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="wrap site-footer__row">
+    <div>
+      <div class="brand brand--footer">Кам'яна&nbsp;Грань</div>
+      <p class="muted">Натуральні мінерали та кристали з перевірених родовищ: Бразилія, Мадагаскар, Уругвай та Урал.</p>
+    </div>
+    <div>
+      <h4>Контакти</h4>
+      <p class="muted">hello@kamyana-gran.ua<br>+380 44 000 00 00<br>Київ, щодня 10:00–19:00</p>
+    </div>
+  </div>
+  <div class="wrap site-footer__bottom muted">© {% now "Y" %} Кам'яна Грань. Демо-магазин на Django.</div>
+</footer>
+</body>
+</html>

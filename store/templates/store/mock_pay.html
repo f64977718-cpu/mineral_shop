@@ -1,0 +1,12 @@
+{% extends "store/base.html" %}
+{% block content %}
+<div class="wrap success-page">
+  <h1>Тестова оплата (лише для розробки)</h1>
+  <p class="muted">Імітація сторінки платіжного провайдера. Сума: {{ payment.amount }} {{ payment.currency }}. Результат піде тим самим шляхом, що й справжній вебхук.</p>
+  <form method="post">
+    {% csrf_token %}
+    <button name="outcome" value="pay" class="btn btn--primary">Імітувати успішну оплату</button>
+    <button name="outcome" value="fail" class="btn btn--ghost">Імітувати відмову</button>
+  </form>
+</div>
+{% endblock %}

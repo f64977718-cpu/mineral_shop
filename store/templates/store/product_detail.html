@@ -1,0 +1,67 @@
+{% extends "store/base.html" %}
+{% block title %}{{ mineral.name }} — Кам'яна Грань{% endblock %}
+{% block content %}
+<div class="wrap breadcrumbs">
+  <a href="{% url 'store:home' %}">Головна</a> /
+  <a href="{% url 'store:category' mineral.category.slug %}">{{ mineral.category.name }}</a> /
+  <span>{{ mineral.name }}</span>
+</div>
+
+<div class="wrap product-detail">
+  <div class="product-detail__media">
+  <div class="product-detail__art{% if mineral.photo_url %} has-photo{% endif %}">
+    {% include "store/_mineral_art.html" %}
+    {% if mineral.discount_percent %}<span class="badge badge--sale">-{{ mineral.discount_percent }}%</span>{% endif %}
+  </div>
+  {% if gallery %}
+  <div class="gallery">
+    {% for img in gallery %}<a href="{{ img.image.url }}" target="_blank" rel="noopener"><img src="{{ img.image.url }}" alt="{{ img.alt|default:mineral.name }}" loading="lazy"></a>{% endfor %}
+  </div>
+  {% endif %}
+  </div>
+  <div class="product-detail__info">
+    <h1>{{ mineral.name }}</h1>
+    <p class="product-detail__short">{{ mineral.short_description }}</p>
+    <div class="price price--lg">
+      {% if mineral.old_price %}<span class="price__old">{{ mineral.old_price }} грн</span>{% endif %}
+      <span class="price__now">{{ mineral.price }} грн</span>
+    </div>
+
+    <dl class="spec-list">
+      <div><dt>Походження</dt><dd>{{ mineral.get_origin_display }}</dd></div>
+      <div><dt>Вага</dt><dd>{{ mineral.weight_grams }} г</dd></div>
+      <div><dt>Категорія</dt><dd>{{ mineral.category.name }}</dd></div>
+      <div><dt>Наявність</dt><dd>{% if mineral.in_stock %}{{ mineral.stock }} шт. в наявності{% else %}Немає в наявності{% endif %}</dd></div>
+    </dl>
+
+    {% if mineral.in_stock %}
+    <form action="{% url 'store:cart_add' mineral.id %}" method="post" class="add-form">
+      {% csrf_token %}
+      {{ cart_form.quantity.label_tag }}
+      {{ cart_form.quantity }}
+      <button type="submit" class="btn btn--primary">Додати в кошик</button>
+    </form>
+    {% else %}
+    <p class="muted">Цей зразок зараз розкуплено — перегляньте схожі мінерали нижче.</p>
+    {% endif %}
+
+    <div class="product-detail__desc">
+      <h3>Опис</h3>
+      <p>{{ mineral.description|linebreaks }}</p>
+    </div>
+  </div>
+</div>
+
+{% if related %}
+<section class="section">
+  <div class="wrap">
+    <h2>Схожі мінерали</h2>
+    <div class="product-grid">
+      {% for mineral in related %}
+        {% include "store/_product_card.html" %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

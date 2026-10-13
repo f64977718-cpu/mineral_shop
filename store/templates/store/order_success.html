@@ -1,0 +1,13 @@
+{% extends "store/base.html" %}
+{% block title %}Дякуємо за замовлення — Кам'яна Грань{% endblock %}
+{% block content %}
+<div class="wrap success-page">
+  <svg class="success-icon" width="56" height="56" viewBox="0 0 56 56" fill="none">
+    <circle cx="28" cy="28" r="26" stroke="currentColor" stroke-width="2"/>
+    <path d="M17 29L24 36L39 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <h1>Дякуємо, {{ order.full_name }}!</h1>
+  <p class="muted">Замовлення №{{ order.id }} на суму {{ order.get_total_cost }} грн оплачено. Ми надішлемо підтвердження на {{ order.email }} і зв'яжемось щодо доставки на {{ order.address }}, {{ order.city }}.</p>
+  <a href="{% url 'store:product_list' %}" class="btn btn--primary">Продовжити покупки</a>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "store/base.html" %}
+{% block title %}{% if category %}{{ category.name }} — Кам'яна Грань{% else %}Каталог — Кам'яна Грань{% endif %}{% endblock %}
+{% block content %}
+<div class="wrap catalog">
+  <aside class="catalog__sidebar">
+    <h3>Категорії</h3>
+    <ul class="sidebar-list">
+      <li><a href="{% url 'store:product_list' %}" class="{% if not category %}is-active{% endif %}">Усі мінерали</a></li>
+      {% for cat in categories %}
+      <li><a href="{% url 'store:category' cat.slug %}" class="{% if category.slug == cat.slug %}is-active{% endif %}">{{ cat.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </aside>
+  <div class="catalog__main">
+    <div class="catalog__head">
+      <h1>{% if category %}{{ category.name }}{% else %}Усі мінерали{% endif %}</h1>
+      <form class="sort-form" method="get">
+        <label for="sort">Сортування:</label>
+        <select name="sort" id="sort" onchange="this.form.submit()">
+          <option value="">За замовчуванням</option>
+          <option value="price_asc" {% if sort == "price_asc" %}selected{% endif %}>Спочатку дешевші</option>
+          <option value="price_desc" {% if sort == "price_desc" %}selected{% endif %}>Спочатку дорожчі</option>
+        </select>
+      </form>
+    </div>
+    {% if category.description %}<p class="muted catalog__desc">{{ category.description }}</p>{% endif %}
+    {% if minerals %}
+    <div class="product-grid">
+      {% for mineral in minerals %}
+        {% include "store/_product_card.html" %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="muted">У цій категорії поки немає товарів.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
